@@ -1,0 +1,65 @@
+body{
+    width: 1440px;
+}
+#logo{
+align-self: center;
+margin-left : 43%
+}
+#recherche{
+    margin: 20px 100px;
+    width: 1240px;
+    height: 70px;
+    background-color: #E7E7E7;
+    font-size: 18px;
+    border-radius: 5px;
+}
+button{
+    cursor: pointer;
+}
+
+select{
+    width: 170px;
+    height: 70px;
+    color : white ;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 2%;
+}
+#select-container{
+    display: flex;
+}
+#select-ingredient{
+    background-color: #3282F7;
+}
+#select-appareil{
+    background-color: #68D9A4 ;
+}
+#select-ustensiles{
+    background-color:#ED6454 ;
+}
+.recipe-container{
+    width: 380px;
+    background-color: #E7E7E7;
+    height: 364px;
+    margin: 3%;
+    
+}
+
+.recipe-container > img {
+    width: 380px;
+    height: 178px;
+    background-color: #C7BEBE;
+}
+
+article{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.description{
+    width: 170px;
+    height: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

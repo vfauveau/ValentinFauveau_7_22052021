@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/0a01dc4da7.js" crossorigin="anonymous"></script>
+    <title>Les Petits Plats</title>
+</head>
+<body>
+    <header>
+        <img id="logo" src="logo_Les_Petits_Plats.jpg"></img>
+    </header>
+    <main>
+        <input placeholder ="Rechercher un ingrédient, appareils, ustensiles ou une recette" id="recherche" textarea type="search">
+            <button id="submit"><i class="fas fa-search"></i></button>
+        </input>
+        <div id="select-container">
+            <select name="ingredient" placeholder="Ingrédient"id="select-ingredient"></select>
+            <select name="appareil" placeholder="Appareil"id="select-appareil"></select>
+            <select name="ustensiles" placeholder="Ustensiles"id="select-ustensiles"></select>
+        </div>
+        <article id="container"></article>
+    </main>
+</body>
+<script src="algo.js"></script>
+</html>
