@@ -4,24 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <script src="https://kit.fontawesome.com/0a01dc4da7.js" crossorigin="anonymous"></script>
     <title>Les Petits Plats</title>
 </head>
 <body>
-    <header>
+    <header class="container-fluid">
         <img id="logo" src="logo_Les_Petits_Plats.jpg"></img>
     </header>
     <main>
-        <input placeholder ="Rechercher un ingrédient, appareils, ustensiles ou une recette" id="recherche" textarea type="search">
+        <div class="container-fluid">
+            <input placeholder ="Rechercher un ingrédient, appareils, ustensiles ou une recette" id="recherche" textarea type="search">
             <button id="submit"><i class="fas fa-search"></i></button>
         </input>
-        <div id="select-container">
-            <select name="ingredient" placeholder="Ingrédient"id="select-ingredient"></select>
-            <select name="appareil" placeholder="Appareil"id="select-appareil"></select>
-            <select name="ustensiles" placeholder="Ustensiles"id="select-ustensiles"></select>
         </div>
-        <article id="container"></article>
+        <div class="container" id="select-container">
+            <select name="ingredient" placeholder="Ingrédient"id="select-ingredient" class="option col-sm-2"></select>
+            <select name="appareil" placeholder="Appareil"id="select-appareil" class="option col-sm-2"></select>
+            <select name="ustensiles" placeholder="Ustensiles"id="select-ustensiles" class="option col-sm-2"></select>
+        </div>
+        <article class="container-fluid recipes-wrapper"></article>
     </main>
 </body>
 <script src="algo.js"></script>
