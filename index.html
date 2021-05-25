@@ -16,13 +16,20 @@
     <main>
         <div class="container-fluid col-12">
             <input placeholder ="Rechercher un ingrédient, appareils, ustensiles ou une recette" id="recherche" textarea type="search">
-            <button id="submit"><i class="fas fa-search"></i></button>
+
         </input>
         </div>
+        <div id="tagSpan" class="container-md row"></div>
         <div class="container-fluid" id="select-container">
-            <select name="ingredient" id="select-ingredient" class="option col-2"></select>
-            <select name="appareil" id="select-appareil" class="option col-2"></select>
-            <select name="ustensiles" id="select-ustensiles" class="option col-2"></select>
+            <select name="ingredient" id="select-ingredient" class="option col-2">
+                <option value=""></option>
+            </select>
+            <select name="appareil" id="select-appareil" class="option col-2">
+                <option value=""></option>
+            </select>
+            <select name="ustensiles" id="select-ustensiles" class="option col-2">
+                <option value=""></option>
+            </select>
         </div>
         <article class="container-fluid  recipes-wrapper"></article>
     </main>
