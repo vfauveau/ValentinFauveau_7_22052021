@@ -1,14 +1,5 @@
 
 /*
-pour chaque *Résultat* ==> afficher Nom & temps de prép / Liste avec pour chaque ingrédients, ingrédient + mesure / description de la recette
-    createImage (w380px * 178px) + cadre de description (380 * 136)
-*/
-
-/* event.onchange => si search.valeur.length > 3,  ==> recherche correspondant a search.valeur :
-    -dans le titre de la recette,
-    -la liste des ingrédients de la recette,
-    -la description de la recette.
- 
 => affiche les résultats dans l'interface.
 => les 3 selects sont mis a jour avec les résultats. (options = résultats correspondant a la searchbar)
 => utilisateur peut préciser sa recherche en utilisant un des 3 selects
@@ -21,7 +12,6 @@ Les résultats de recherche sont actualisés, ainsi que les éléments disponibl
 champs de recherche avancée */
 
 let searchbar = document.getElementById("recherche")
-let valeurRecherche;
 let container = document.querySelector(".recipes-wrapper")
 let selectIngr = document.getElementById("select-ingredient")
 let selectUst = document.getElementById("select-appareil")
@@ -31,7 +21,6 @@ let filteredArray = []
 function clearArray(array) {
     array.length = 0
 }
-
 function affiche(recette) {
     let parent = document.createElement("div")
     let texteContainer = document.createElement("div")
@@ -49,19 +38,19 @@ function affiche(recette) {
         let li = document.createElement("li")
         // création des ingrédients dans la liste
         let strong = document.createElement("strong")
-        strong.textContent = ingr.ingredient
+        strong.textContent = ingr.ingredient +" " + (ingr.quantity ? ingr.quantity : "") +" " + (ingr.unit ? ingr.unit : "")
         li.appendChild(strong)
         liste.appendChild(li)
     }
+    container.appendChild(parent)
     parent.appendChild(img)
+    bloctexte.appendChild(liste)
+    bloctexte.appendChild(descr)
     generalInfo.appendChild(title)
     generalInfo.appendChild(time)
     texteContainer.appendChild(generalInfo)
     texteContainer.appendChild(bloctexte)
-    bloctexte.appendChild(liste)
-    bloctexte.appendChild(descr)
     parent.appendChild(texteContainer)
-    container.appendChild(parent)
 
     generalInfo.classList.add("recipe-title")
     texteContainer.classList.add("recipe-text-container")
@@ -69,12 +58,13 @@ function affiche(recette) {
     parent.classList.add("recipe-container")
     descr.classList.add("description")
 }
+
 fetch("recipes.json")
     .then((resp) => resp.json())
     .then(function (data) {
         let completeData = data.recipes
         let resultat = []
-        let arrayRempli = []
+        let arrayRempli = [] // = ARRAY QUI CONTIENT LENSEMBLE DES ELEMENTS
         let tableauOptionFiltre = []
         // filtre des tableaux d'options
         function filterOption() {
@@ -120,42 +110,69 @@ fetch("recipes.json")
             filterOption()
             appendOption(selectApp, tableauOptionFiltre.length)
         }
-        ingredientSelectFiller()
-        ustensilSelectFiller()
-        applianceSelectFiller()
-        /* si une valeur est entrée dans la barre de recherche, et que celle-ci vaut 3 charactères ou +
-        on donne la valeur entrée à la variable valeurRecherche et on appelle la fonction search pour voir sil y a des éléments qui correspondent à la valeur recherchée.
-        Puis on ajoute au tableau résultat les réponses correspondantes.
-        On filtre ce tableau pour n'avoir que des éléments uniques.
-        Puis on utilise la fonction d'affichage en passant les éléments du tableau résultat en paramètre.
-        Le tableau résultat et l'HTML sont réininitialisés à chaque changements
-        */
+
+        // fonction qui effectue la recherche sur le fichier json et renvoi les valeurs trouvées
         function search(recherche, typ) { return completeData.filter(item => item[typ].includes(recherche)) }
-        searchbar.onchange = () => {
-            container.innerHTML = ""
-            if (searchbar.value.length > 2) {
-                container.innerHTML = ""
-                clearArray(resultat)
-                valeurRecherche = searchbar.value
-                for (let elt of (search(valeurRecherche, "name"))) {
-                    resultat.push(elt)
-                }
-                for (let elt of (search(valeurRecherche, "description"))) {
-                    resultat.push(elt)
-                }
-                for (let elt of (search(valeurRecherche, "ingredients"))) {
-                    resultat.push(elt)
-                }
-                filteredArray = resultat.filter(function (ele, pos) {
-                    return resultat.indexOf(ele) == pos;
-                })
-                for (elt of filteredArray) {
-                    affiche(elt)
-                }
+        function search2(recherche,typ) {return completeData.filter(item=>item[typ].filter(it=>it.ingredient.includes(recherche)).length>0 )}
+
+        // on push les valeurs trouvées par le search dans un tableau résultat
+        function searchPush(recherche, typ) {
+            for (let elt of (search(recherche, typ))) {
+                resultat.push(elt)
+            }
+        }
+        function searchPush2(recherche, typ) {
+            for (let elt of (search2(recherche, typ))) {
+                resultat.push(elt)
             }
         }
 
+        // fonction qui effectue les recherches, filtre les résultats, et les affiche dans le DOM
+        function filterAndAffiche(recherche) {
+            container.innerHTML = ""
+            clearArray(resultat)
+            searchPush(recherche ,"name")
+            searchPush(recherche ,"description")
+            searchPush(recherche ,"appliance")
+            searchPush2(recherche ,"ingredients")
+            filteredArray = resultat.filter(function (ele, pos) {
+                return resultat.indexOf(ele) == pos;
+            })
+            for (elt of filteredArray) {
+                affiche(elt)
+            }
+        }
+
+        ingredientSelectFiller()
+        ustensilSelectFiller()
+        applianceSelectFiller()
+
+
+        // RECHERCHES // INPUTS.
+        // searchBar search / 3 charactères dans la barre de recherche principale (reste à enlever les espaces)
+        searchbar.onkeydown = (e) => {
+            container.innerHTML = ""
+            if (searchbar.value.length > 2) {
+                filterAndAffiche(searchbar.value)
+            }
+        }
+        // select Appliance search
+        selectApp.onchange = () => {
+            container.innerHTML = ""
+            filterAndAffiche(selectApp.value)
+        }
+        //select ustensils search
+        selectUst.onchange = () => {
+            container.innerHTML = ""
+            filterAndAffiche(selectUst.value)
+        }
+        //select ingr search (pas fonctionnelle)
+        selectIngr.onchange = () => {
+            container.innerHTML = ""
+            filterAndAffiche(selectIngr.value)
+        }
     })
+
     .catch(function (error) {
         console.log(error);
     });

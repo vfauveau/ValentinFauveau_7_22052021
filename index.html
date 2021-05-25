@@ -10,21 +10,21 @@
     <title>Les Petits Plats</title>
 </head>
 <body>
-    <header class="container-fluid">
+    <header class="container-fluid col-12">
         <img id="logo" src="logo_Les_Petits_Plats.jpg"></img>
     </header>
     <main>
-        <div class="container-fluid">
+        <div class="container-fluid col-12">
             <input placeholder ="Rechercher un ingrédient, appareils, ustensiles ou une recette" id="recherche" textarea type="search">
             <button id="submit"><i class="fas fa-search"></i></button>
         </input>
         </div>
-        <div class="container" id="select-container">
-            <select name="ingredient" placeholder="Ingrédient"id="select-ingredient" class="option col-sm-2"></select>
-            <select name="appareil" placeholder="Appareil"id="select-appareil" class="option col-sm-2"></select>
-            <select name="ustensiles" placeholder="Ustensiles"id="select-ustensiles" class="option col-sm-2"></select>
+        <div class="container-fluid" id="select-container">
+            <select name="ingredient" id="select-ingredient" class="option col-2"></select>
+            <select name="appareil" id="select-appareil" class="option col-2"></select>
+            <select name="ustensiles" id="select-ustensiles" class="option col-2"></select>
         </div>
-        <article class="container-fluid recipes-wrapper"></article>
+        <article class="container-fluid  recipes-wrapper"></article>
     </main>
 </body>
 <script src="algo.js"></script>
