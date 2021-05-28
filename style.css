@@ -17,7 +17,7 @@ li{
 align-self: center;
 }
 #recherche{
-    margin: 20px 100px;
+    margin: 20px 40px;
     width: 1240px;
     height: 70px;
     background-color: #E7E7E7;
@@ -28,7 +28,12 @@ button{
     cursor: pointer;
 }
 
-select{
+
+#select-container{
+    display: flex;
+}
+#select-ingredient{
+    background-color: #3282F7;
     width: 170px;
     height: 70px;
     color : white ;
@@ -37,18 +42,26 @@ select{
     font-weight: bold;
     margin: 0 2%;
 }
-#select-container{
-    display: flex;
-}
-#select-ingredient{
-    background-color: #3282F7;
-}
 #select-appareil{
     background-color: #68D9A4 ;
     text-transform: capitalize;
+    width: 170px;
+    height: 70px;
+    color : white ;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 2%;
 }
 #select-ustensiles{
     background-color:#ED6454 ;
+    width: 170px;
+    height: 70px;
+    color : white ;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 2%;
 }
 .recipe-container{
     width: 380px;
@@ -100,10 +113,11 @@ select{
     height: 100%;
 }
 .tagButton{
-    background-color: #3282F7;
     color :#E7E7E7;
     width: auto;
     height: 37px;
+    width: 150px;
+    font-weight: 700;
     margin: 3%;
     padding: 2%;
     text-align: center;
@@ -111,4 +125,11 @@ select{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: pre;
+}
+
+datalist{
+    text-transform: capitalize;
+}
+input::placeholder{
+    color: #E7E7E7;
 }

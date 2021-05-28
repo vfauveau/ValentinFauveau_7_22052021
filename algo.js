@@ -1,23 +1,13 @@
-
-/*
-=> affiche les résultats dans l'interface.
-=> les 3 selects sont mis a jour avec les résultats. (options = résultats correspondant a la searchbar)
-=> utilisateur peut préciser sa recherche en utilisant un des 3 selects
-=> Au fur et à mesure du remplissage les mots clés ne correspondant pas à la frappe dans le
-champ disparaissent. Par exemple, si l’utilisateur entre “coco” dans la liste d’ingrédients,
-seuls vont rester “noix de coco” et “lait de coco”.
-L’utilisateur choisit un mot clé dans le champ
-Le mot clé apparaît sous forme de tag sous la recherche principale
-Les résultats de recherche sont actualisés, ainsi que les éléments disponibles dans les
-champs de recherche avancée */
-
 let searchbar = document.getElementById("recherche")
 let container = document.querySelector(".recipes-wrapper")
 let selectIngr = document.getElementById("select-ingredient")
-let selectUst = document.getElementById("select-appareil")
-let selectApp = document.getElementById("select-ustensiles")
+let selectUst = document.getElementById("select-ustensiles")
+let selectApp = document.getElementById("select-appareil")
 let tagContainer = document.getElementById("tagSpan")
 let filteredArray = []
+let datalistIngr = document.getElementById("data-list-ingredient")
+let datalistApp = document.getElementById("data-list-appareil")
+let datalistUst = document.getElementById("data-list-ustensiles")
 // clear array
 function clearArray(array) {
     array.length = 0
@@ -68,6 +58,7 @@ fetch("recipes.json")
         // fonction qui effectue la recherche sur le fichier json et renvoi les valeurs trouvées
         function search(recherche, typ) { return completeData.filter(item => item[typ].includes(recherche)) }
         function search2(recherche, typ) { return completeData.filter(item => item[typ].filter(it => it.ingredient.includes(recherche)).length > 0) }
+        function search3(recherche, typ) { return completeData.filter(item => item[typ].filter(it => it.includes(recherche)).length > 0) }
 
         // on push les valeurs trouvées par le search dans un tableau résultat
         function searchPush(recherche, typ) {
@@ -80,61 +71,70 @@ fetch("recipes.json")
                 resultat.push(elt)
             }
         }
+        function searchPush3(recherche, typ) {
+            for (let elt of (search3(recherche, typ))) {
+                resultat.push(elt)
+            }
+        }
         // SELECT BOX PAR DEFAUT
-        function creationOption(select, array) {
+        function creationOption(liste, array) {
             let items = array.filter(function (ele, pos) {
                 return array.indexOf(ele) == pos;
             })
-            for (let elt of items ) {
+            for (let elt of items) {
                 let option = document.createElement("option")
                 option.textContent = elt;
-                select.appendChild(option)
+                liste.appendChild(option)
             }
             clearArray(array)
         }
-        // Select BOX Ingrédients
-        function defaultSelectIng(select) {
+        // Select BOX Ingrédients par defaut
+        function defaultSelectIng(liste) {
             let arrayTest = []
             for (let i in completeData) {
                 for (let x in completeData[i].ingredients)
                     arrayTest.push(completeData[i].ingredients[x].ingredient)
             }
-            creationOption(select, arrayTest)
+            creationOption(liste, arrayTest)
+            selectIngr.value = ""
         }
-        // Select Box Appliance
-        function defaultSelectApp(select) {
+        // Select Box Appliance par defaut
+        function defaultSelectApp(liste) {
             let arrayTest = []
             for (let i in completeData) {
                 arrayTest.push(completeData[i].appliance)
             }
-            creationOption(select, arrayTest)
+            creationOption(liste, arrayTest)
+            selectApp.value = ""
         }
-        // Select BOX Ustensils
-        function defaultSelectUst(select) {
+        // Select BOX Ustensils par defaut
+        function defaultSelectUst(liste) {
             let arrayTest = []
             for (let i in completeData) {
                 for (let x in completeData[i].ustensils) {
                     arrayTest.push(completeData[i].ustensils[x])
                 }
             }
-            creationOption(select, arrayTest)
+            creationOption(liste, arrayTest)
+            selectUst.value=""
         }
         // Reset selectBox display
         function resetSearch() {
-            selectApp.innerHTML = ""
-            selectIngr.innerHTML = ""
-            selectUst.innerHTML = ""
-            defaultSelectIng(selectIngr)
-            defaultSelectUst(selectUst)
-            defaultSelectApp(selectApp)
+            datalistApp.innerHTML = ""
+            datalistIngr.innerHTML = ""
+            datalistUst.innerHTML = ""
+            container.innerHTML=""
+            defaultSelectIng(datalistIngr)
+            defaultSelectUst(datalistUst)
+            defaultSelectApp(datalistApp)
             clearArray(filteredArray)
         }
 
-        defaultSelectIng(selectIngr)
-        defaultSelectUst(selectUst)
-        defaultSelectApp(selectApp)
+        defaultSelectIng(datalistIngr)
+        defaultSelectUst(datalistUst)
+        defaultSelectApp(datalistApp)
 
-        // fonction qui effectue les recherches, filtre les résultats
+        // fonction qui effectue les recherches, filtre les résultats et renvoi le tableau de résultat.
         function filterData(recherche) {
             container.innerHTML = ""
             clearArray(resultat)
@@ -142,24 +142,29 @@ fetch("recipes.json")
             searchPush(recherche, "description")
             searchPush(recherche, "appliance")
             searchPush2(recherche, "ingredients")
+            searchPush3(recherche, "ustensils")
             filteredArray = resultat.filter(function (ele, pos) {
                 return resultat.indexOf(ele) == pos;
             })
             return filteredArray
         }
-        // fonction qui affiche les résultats et nettoie les select en prévision d'un ajout
-        function filterAffichage () {
+        // fonction qui affiche les résultats, vide les data list et les remplis avec les mots clés correspondants à l'entrée de l'utilisateur
+        function filterAffichage(recherche) {
             for (elt of filteredArray) {
                 affiche(elt)
             }
-            selectApp.innerHTML=""
-            selectIngr.innerHTML=""
-            selectUst.innerHTML=""
-            optionsAppliance ()
-            optionsIngredients ()
-            optionsUstensiles ()
+            
+            if(filteredArray.length === 0){
+                emptyResponse()
+            }
+            datalistApp.innerHTML = ""
+            datalistIngr.innerHTML = ""
+            datalistUst.innerHTML = ""
+            optionsAppliance(recherche)
+            optionsIngredients(recherche)
+            optionsUstensiles(recherche)
         }
-        function optionsAppliance () {
+        function optionsAppliance(recherche) {
             let arrayAppliance = []
             for (let i in filteredArray) {
                 arrayAppliance.push(filteredArray[i].appliance)
@@ -167,13 +172,14 @@ fetch("recipes.json")
             let items = arrayAppliance.filter(function (ele, pos) {
                 return arrayAppliance.indexOf(ele) == pos;
             })
-            for(let x of items){
+            var items2 = items.filter(element => element.includes(recherche))
+            for (let x of items2) {
                 let option = document.createElement("option")
-                option.textContent=x
-                selectApp.appendChild(option)
+                option.textContent = x
+                datalistApp.appendChild(option)
             }
         }
-        function optionsIngredients () {
+        function optionsIngredients(recherche) {
             let arrayIngredients = []
             for (let i in filteredArray) {
                 for (let x in filteredArray[i].ingredients)
@@ -182,15 +188,15 @@ fetch("recipes.json")
             let items = arrayIngredients.filter(function (ele, pos) {
                 return arrayIngredients.indexOf(ele) == pos;
             })
-            
-            for(let x of items){
+            let items2 = items.filter(element => element.includes(recherche))
+            for (let x of items2) {
                 let option = document.createElement("option")
-                option.textContent=x
-                selectIngr.appendChild(option)
+                option.textContent = x
+                datalistIngr.appendChild(option)
             }
         }
 
-        function optionsUstensiles (recherche) {
+        function optionsUstensiles(recherche) {
             let arrayUstensiles = []
             // On récupère les éléments trovués dans un array
             for (let i in filteredArray) {
@@ -202,59 +208,62 @@ fetch("recipes.json")
             let items = arrayUstensiles.filter(function (ele, pos) {
                 return arrayUstensiles.indexOf(ele) == pos;
             })
-
+            let items2 = items.filter(element => element.includes(recherche))
             // on affiche les éléments restants
-            for(let x of items){
+            for (let x of items2) {
                 let option = document.createElement("option")
-                option.textContent=x
-                selectUst.appendChild(option)
+                option.textContent = x
+                datalistUst.appendChild(option)
             }
         }
 
-        function tagButton (select) {
-            let tag = document.createElement("div")
-            tag.classList.add("tagButton")
-            tag.textContent = select.value
-            tagContainer.appendChild(tag)
-            tag.onclick=()=>{tag.style.display="none"}
-            while (tagContainer.firstChild) {
-                tagContainer.removeChild(tagContainer.firstChild)
+        // Fonction qui gère la création et affichage du tag quand un mot clé est selectionné dans une datalist
+        function displaytag(tag, color) {
+            let btntag = document.createElement("span")
+            btntag.textContent = tag
+            tagContainer.appendChild(btntag)
+            btntag.classList.add("tagButton")
+            btntag.style.backgroundColor= color
+            btntag.onclick = () => {
+                tagContainer.removeChild(btntag)
+                resetSearch()
             }
         }
-
+        // cas où il n'y a pas de résultat
+        function emptyResponse () {
+            let response = document.createElement("span")
+            response.textContent="Votre recherche ne correspond à aucune réponse. Essayez des mots clés tels que sucre, tomates..."
+            container.appendChild(response)
+        }
         // RECHERCHES // INPUTS.
         // searchBar search / 3 charactères dans la barre de recherche principale (reste à enlever les espaces)
         searchbar.onkeydown = (e) => {
             container.innerHTML = ""
             if (searchbar.value.length > 2) {
                 filterData(searchbar.value)
-                filterAffichage()
+                filterAffichage(searchbar.value)
             }
             else if (searchbar.value.length < 2) {
                 resetSearch()
             }
         }
 
+        let selectors = [selectIngr, selectApp , selectUst]
+        let backgroundColors = ["#3282F7", "#68D9A4", "#ED6454"]
 
-
-        // TO DO
-        // select Appliance search
-        selectApp.onchange = () => {
-            container.innerHTML = ""
-            tagButton(selectApp)
-        }
-        //select ustensils search
-        selectUst.onchange = () => {
-            container.innerHTML = ""
-            tagButton(selectUst)
-
-        }
-        //select ingr search (pas fonctionnelle)
-        selectIngr.onchange = () => {
-            container.innerHTML = ""
-            tagButton(selectIngr)
+        // onchange
+        for (let i in selectors) {
+            selectors[i].onchange = () => {
+                container.innerHTML = ""
+                if(selectors[i].value != ""){ // à demander si bonne pratique
+                    filterData(selectors[i].value)
+                    filterAffichage(selectors[i].value)
+                    displaytag(selectors[i].value, backgroundColors[i])
+                }
+            }
         }
     })
+
     .catch(function (error) {
         console.log(error);
     });
