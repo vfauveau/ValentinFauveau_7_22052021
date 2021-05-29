@@ -54,11 +54,12 @@ fetch("recipes.json")
     .then((resp) => resp.json())
     .then(function (data) {
         let completeData = data.recipes
+        filteredArray = completeData
         let resultat = [] // = Résultat de la recherche non filtré (= avec doublons)
         // fonction qui effectue la recherche sur le fichier json et renvoi les valeurs trouvées
-        function search(recherche, typ) { return completeData.filter(item => item[typ].includes(recherche)) }
-        function search2(recherche, typ) { return completeData.filter(item => item[typ].filter(it => it.ingredient.includes(recherche)).length > 0) }
-        function search3(recherche, typ) { return completeData.filter(item => item[typ].filter(it => it.includes(recherche)).length > 0) }
+        function search(recherche, typ) { return filteredArray.filter(item => item[typ].includes(recherche)) }
+        function search2(recherche, typ) { return  filteredArray.filter(item => item[typ].filter(it => it.ingredient.includes(recherche)).length > 0) }
+        function search3(recherche, typ) { return  filteredArray.filter(item => item[typ].filter(it => it.includes(recherche)).length > 0) }
 
         // on push les valeurs trouvées par le search dans un tableau résultat
         function searchPush(recherche, typ) {
@@ -124,10 +125,10 @@ fetch("recipes.json")
             datalistIngr.innerHTML = ""
             datalistUst.innerHTML = ""
             container.innerHTML=""
+            filteredArray = completeData
             defaultSelectIng(datalistIngr)
             defaultSelectUst(datalistUst)
             defaultSelectApp(datalistApp)
-            clearArray(filteredArray)
         }
 
         defaultSelectIng(datalistIngr)
@@ -137,7 +138,6 @@ fetch("recipes.json")
         // fonction qui effectue les recherches, filtre les résultats et renvoi le tableau de résultat.
         function filterData(recherche) {
             container.innerHTML = ""
-            clearArray(resultat)
             searchPush(recherche, "name")
             searchPush(recherche, "description")
             searchPush(recherche, "appliance")
@@ -146,25 +146,25 @@ fetch("recipes.json")
             filteredArray = resultat.filter(function (ele, pos) {
                 return resultat.indexOf(ele) == pos;
             })
+            clearArray(resultat)
             return filteredArray
         }
         // fonction qui affiche les résultats, vide les data list et les remplis avec les mots clés correspondants à l'entrée de l'utilisateur
-        function filterAffichage(recherche) {
+        function filterAffichage() {
             for (elt of filteredArray) {
                 affiche(elt)
             }
-            
             if(filteredArray.length === 0){
                 emptyResponse()
             }
             datalistApp.innerHTML = ""
             datalistIngr.innerHTML = ""
             datalistUst.innerHTML = ""
-            optionsAppliance(recherche)
-            optionsIngredients(recherche)
-            optionsUstensiles(recherche)
+            optionsAppliance()
+            optionsIngredients()
+            optionsUstensiles()
         }
-        function optionsAppliance(recherche) {
+        function optionsAppliance() {
             let arrayAppliance = []
             for (let i in filteredArray) {
                 arrayAppliance.push(filteredArray[i].appliance)
@@ -172,14 +172,14 @@ fetch("recipes.json")
             let items = arrayAppliance.filter(function (ele, pos) {
                 return arrayAppliance.indexOf(ele) == pos;
             })
-            var items2 = items.filter(element => element.includes(recherche))
-            for (let x of items2) {
+            
+            for (let x of items) {
                 let option = document.createElement("option")
                 option.textContent = x
                 datalistApp.appendChild(option)
             }
         }
-        function optionsIngredients(recherche) {
+        function optionsIngredients() {
             let arrayIngredients = []
             for (let i in filteredArray) {
                 for (let x in filteredArray[i].ingredients)
@@ -188,15 +188,15 @@ fetch("recipes.json")
             let items = arrayIngredients.filter(function (ele, pos) {
                 return arrayIngredients.indexOf(ele) == pos;
             })
-            let items2 = items.filter(element => element.includes(recherche))
-            for (let x of items2) {
+
+            for (let x of items) {
                 let option = document.createElement("option")
                 option.textContent = x
                 datalistIngr.appendChild(option)
             }
         }
 
-        function optionsUstensiles(recherche) {
+        function optionsUstensiles() {
             let arrayUstensiles = []
             // On récupère les éléments trovués dans un array
             for (let i in filteredArray) {
@@ -208,9 +208,9 @@ fetch("recipes.json")
             let items = arrayUstensiles.filter(function (ele, pos) {
                 return arrayUstensiles.indexOf(ele) == pos;
             })
-            let items2 = items.filter(element => element.includes(recherche))
+            
             // on affiche les éléments restants
-            for (let x of items2) {
+            for (let x of items) {
                 let option = document.createElement("option")
                 option.textContent = x
                 datalistUst.appendChild(option)
@@ -221,9 +221,14 @@ fetch("recipes.json")
         function displaytag(tag, color) {
             let btntag = document.createElement("span")
             btntag.textContent = tag
-            tagContainer.appendChild(btntag)
-            btntag.classList.add("tagButton")
+            let tagX = document.createElement("button")
+            tagX.textContent = "X"
             btntag.style.backgroundColor= color
+            tagContainer.appendChild(btntag)
+            btntag.appendChild(tagX)
+            tagX.classList.add("xbutton")
+            tagX.style.backgroundColor = color
+            btntag.classList.add("tagButton")
             btntag.onclick = () => {
                 tagContainer.removeChild(btntag)
                 resetSearch()
@@ -232,7 +237,7 @@ fetch("recipes.json")
         // cas où il n'y a pas de résultat
         function emptyResponse () {
             let response = document.createElement("span")
-            response.textContent="Votre recherche ne correspond à aucune réponse. Essayez des mots clés tels que sucre, tomates..."
+            response.textContent="Votre recherche ne correspond à aucune réponse. Essayez autre chose ..."
             container.appendChild(response)
         }
         // RECHERCHES // INPUTS.
