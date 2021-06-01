@@ -24,11 +24,12 @@ align-self: center;
     font-size: 18px;
     border-radius: 5px;
 }
+#recherche::placeholder{
+    color :#000000 ; 
+}
 button{
     cursor: pointer;
 }
-
-
 #select-container{
     display: flex;
 }
@@ -143,6 +144,7 @@ datalist{
 input::placeholder{
     color: #E7E7E7;
 }
+
 option{
     color: #E7E7E7;
     background-color: #3282F7;
@@ -154,4 +156,9 @@ option{
     margin-left : 10px ;
     font-weight: bold;
     font-size: 12px;
+}
+.spanErreur{
+    margin-left : 40px ;
+    margin-top: 10px;
+    font-size: 20px;
 }

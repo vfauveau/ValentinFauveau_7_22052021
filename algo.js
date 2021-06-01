@@ -60,7 +60,9 @@ fetch("recipes.json")
         function search(recherche, typ) { return filteredArray.filter(item => item[typ].includes(recherche)) }
         function search2(recherche, typ) { return  filteredArray.filter(item => item[typ].filter(it => it.ingredient.includes(recherche)).length > 0) }
         function search3(recherche, typ) { return  filteredArray.filter(item => item[typ].filter(it => it.includes(recherche)).length > 0) }
-
+        // opérations = vérifier que la valeur entrée est dans les noms si oui, enleve l'objet du filteredArray et l'ajoute au résultat. 
+        // Quand plus aucun élément ne correspond ==> procède à la recherche sur la description pour chaque element restant. 
+        // Quand plus aucun élément ne correspond ==> procède à la recherche sur les ingrédients sur les éléments restants
         // on push les valeurs trouvées par le search dans un tableau résultat
         function searchPush(recherche, typ) {
             for (let elt of (search(recherche, typ))) {
@@ -242,7 +244,7 @@ fetch("recipes.json")
         }
         // RECHERCHES // INPUTS.
         // searchBar search / 3 charactères dans la barre de recherche principale (reste à enlever les espaces)
-        searchbar.onkeydown = (e) => {
+        searchbar.onkeydown = () => {
             container.innerHTML = ""
             if (searchbar.value.length > 2) {
                 filterData(searchbar.value)
@@ -260,7 +262,7 @@ fetch("recipes.json")
         for (let i in selectors) {
             selectors[i].onchange = () => {
                 container.innerHTML = ""
-                if(selectors[i].value != ""){ // à demander si bonne pratique
+                if(selectors[i].value !== ""){ // à demander si bonne pratique
                     filterData(selectors[i].value)
                     filterAffichage(selectors[i].value)
                     displaytag(selectors[i].value, backgroundColors[i])
