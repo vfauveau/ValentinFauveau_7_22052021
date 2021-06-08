@@ -27,6 +27,13 @@ align-self: center;
 #recherche::placeholder{
     color :#000000 ; 
 }
+#searchButton{
+    position: relative;
+    z-index: 5;
+    right: 7%;
+    BORDER: NONE;
+    background-color: inherit;
+}
 button{
     cursor: pointer;
 }
@@ -41,7 +48,7 @@ button{
     border-radius: 5px;
     font-size: 18px;
     font-weight: bold;
-    margin: 0 2%;
+    margin: 0 3%;
 }
 #select-appareil{
     background-color: #68D9A4 ;
@@ -52,7 +59,7 @@ button{
     border-radius: 5px;
     font-size: 18px;
     font-weight: bold;
-    margin: 0 2%;
+    margin: 0 3.2%;
 }
 #select-ustensiles{
     background-color:#ED6454 ;
@@ -62,7 +69,7 @@ button{
     border-radius: 5px;
     font-size: 18px;
     font-weight: bold;
-    margin: 0 2%;
+    margin: 0 3.2%;
 }
 .recipe-container{
     width: 380px;
@@ -81,9 +88,6 @@ button{
     display: flex;
     flex-wrap: wrap;
     padding: 0;
-}
-#tagSpan{
-    width: 300px;
 }
 .description{
     width: 170px;
@@ -114,11 +118,11 @@ button{
     height: 100%;
 }
 #tagSpan{
-    height: 70px;
-    margin-left: 20px;
+    height: 60px;
     display: inline-flex;
     flex-wrap: nowrap;
     flex-direction: row;
+    margin-bottom: 15px;
 }
 .tagButton{
     min-width: 150px;
@@ -126,8 +130,9 @@ button{
     width: auto;
     height: 40px;
     width: auto;
+    margin-left: 42px;
+    margin-right: 15px;
     font-weight: 700;
-    margin: 3%;
     padding: 2%;
     text-align: center;
     border-radius: 5px;
@@ -144,12 +149,15 @@ datalist{
 input::placeholder{
     color: #E7E7E7;
 }
-
+.emptyresp{
+    margin-left: 42px;
+    margin-top: 20px;
+}
 option{
     color: #E7E7E7;
     background-color: #3282F7;
 }
-.xbutton{
+.close-button{
     color : white ;
     border-radius: 50%;
     border: 3px solid white;
