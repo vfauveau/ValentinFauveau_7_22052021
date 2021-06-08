@@ -1,11 +1,12 @@
 body{
-    width: 1440px;
+    width: auto;
 }
 header{
-    width: 100%;
+    max-width: auto;
     justify-content: center;
     display: flex;
 }
+
 ul{
     padding-left :0;
     list-style: none;
@@ -16,9 +17,11 @@ li{
 #logo{
 align-self: center;
 }
+
 #recherche{
-    margin: 20px 40px;
-    width: 1240px;
+    margin: auto;
+    width: 90%;
+    max-width: 1240px;
     height: 70px;
     background-color: #E7E7E7;
     font-size: 18px;
@@ -37,9 +40,7 @@ align-self: center;
 button{
     cursor: pointer;
 }
-#select-container{
-    display: flex;
-}
+
 #select-ingredient{
     background-color: #3282F7;
     width: 170px;
@@ -170,4 +171,26 @@ option{
     margin-left : 40px ;
     margin-top: 10px;
     font-size: 20px;
+}
+
+@media (max-width : 800px) {
+    #select-container{
+    display: flex;
+    flex-direction: column;
+    }
+    #select-appareil,#select-ingredient,#select-ustensiles{
+        width: 90%;
+        margin-top : 20px ;
+    }
+    datalist{
+        width: auto;
+    }
+
+    #logo{
+        width: 90%;
+        height: 100%;
+    }
+    #recherche{
+        margin :0 3%;
+    }
 }
