@@ -5,9 +5,13 @@ let selectUst = document.getElementById("select-ustensiles")
 let selectApp = document.getElementById("select-appareil")
 let tagContainer = document.getElementById("tagSpan")
 let filteredArray = []
+let allTags = []
+let searchButton = document.getElementById("searchButton")
 let datalistIngr = document.getElementById("data-list-ingredient")
 let datalistApp = document.getElementById("data-list-appareil")
 let datalistUst = document.getElementById("data-list-ustensiles")
+
+
 // clear array
 function clearArray(array) {
     array.length = 0
@@ -53,15 +57,13 @@ function affiche(recette) {
 fetch("recipes.json")
     .then((resp) => resp.json())
     .then(function (data) {
-        let completeData = data.recipes
-        filteredArray = completeData
+        let recipes = data.recipes
+        filteredArray = recipes
         let resultat = [] // = Résultat de la recherche non filtré (= avec doublons)
         // fonction qui effectue la recherche sur le fichier json et renvoi les valeurs trouvées
         function search(recherche, typ) { return filteredArray.filter(item => item[typ].includes(recherche)) }
-        function search2(recherche, typ) { return  filteredArray.filter(item => item[typ].filter(it => it.ingredient.includes(recherche)).length > 0) }
-        function search3(recherche, typ) { return  filteredArray.filter(item => item[typ].filter(it => it.includes(recherche)).length > 0) }
-
-        // on push les valeurs trouvées par le search dans un tableau résultat
+        function search2(recherche, typ) { return filteredArray.filter(item => item[typ].filter(it => it.ingredient.includes(recherche)).length > 0) }
+        function search3(recherche, typ) { return filteredArray.filter(item => item[typ].filter(it => it.includes(recherche)).length > 0) }
         function searchPush(recherche, typ) {
             for (let elt of (search(recherche, typ))) {
                 resultat.push(elt)
@@ -92,9 +94,9 @@ fetch("recipes.json")
         // Select BOX Ingrédients par defaut
         function defaultSelectIng(liste) {
             let arrayTest = []
-            for (let i in completeData) {
-                for (let x in completeData[i].ingredients)
-                    arrayTest.push(completeData[i].ingredients[x].ingredient)
+            for (let i in recipes) {
+                for (let x in recipes[i].ingredients)
+                    arrayTest.push(recipes[i].ingredients[x].ingredient)
             }
             creationOption(liste, arrayTest)
             selectIngr.value = ""
@@ -102,8 +104,8 @@ fetch("recipes.json")
         // Select Box Appliance par defaut
         function defaultSelectApp(liste) {
             let arrayTest = []
-            for (let i in completeData) {
-                arrayTest.push(completeData[i].appliance)
+            for (let i in recipes) {
+                arrayTest.push(recipes[i].appliance)
             }
             creationOption(liste, arrayTest)
             selectApp.value = ""
@@ -111,26 +113,28 @@ fetch("recipes.json")
         // Select BOX Ustensils par defaut
         function defaultSelectUst(liste) {
             let arrayTest = []
-            for (let i in completeData) {
-                for (let x in completeData[i].ustensils) {
-                    arrayTest.push(completeData[i].ustensils[x])
+            for (let i in recipes) {
+                for (let x in recipes[i].ustensils) {
+                    arrayTest.push(recipes[i].ustensils[x])
                 }
             }
             creationOption(liste, arrayTest)
-            selectUst.value=""
+            selectUst.value = ""
         }
         // Reset selectBox display
         function resetSearch() {
             datalistApp.innerHTML = ""
             datalistIngr.innerHTML = ""
             datalistUst.innerHTML = ""
-            container.innerHTML=""
-            filteredArray = completeData
+            container.innerHTML = ""
+            filteredArray = recipes
+            tagContainer.innerHTML = ""
             defaultSelectIng(datalistIngr)
             defaultSelectUst(datalistUst)
             defaultSelectApp(datalistApp)
+            clearArray(allTags)
         }
-
+        // remplissage et affichage par défaut des sélecteurs de tag
         defaultSelectIng(datalistIngr)
         defaultSelectUst(datalistUst)
         defaultSelectApp(datalistApp)
@@ -154,7 +158,7 @@ fetch("recipes.json")
             for (elt of filteredArray) {
                 affiche(elt)
             }
-            if(filteredArray.length === 0){
+            if (filteredArray.length === 0) {
                 emptyResponse()
             }
             datalistApp.innerHTML = ""
@@ -172,7 +176,6 @@ fetch("recipes.json")
             let items = arrayAppliance.filter(function (ele, pos) {
                 return arrayAppliance.indexOf(ele) == pos;
             })
-            
             for (let x of items) {
                 let option = document.createElement("option")
                 option.textContent = x
@@ -208,7 +211,7 @@ fetch("recipes.json")
             let items = arrayUstensiles.filter(function (ele, pos) {
                 return arrayUstensiles.indexOf(ele) == pos;
             })
-            
+
             // on affiche les éléments restants
             for (let x of items) {
                 let option = document.createElement("option")
@@ -219,53 +222,78 @@ fetch("recipes.json")
 
         // Fonction qui gère la création et affichage du tag quand un mot clé est selectionné dans une datalist
         function displaytag(tag, color) {
+            // creation et génération des tags
             let btntag = document.createElement("span")
-            btntag.textContent = tag
-            let tagX = document.createElement("button")
-            tagX.textContent = "X"
-            btntag.style.backgroundColor= color
-            tagContainer.appendChild(btntag)
-            btntag.appendChild(tagX)
-            tagX.classList.add("xbutton")
-            tagX.style.backgroundColor = color
             btntag.classList.add("tagButton")
-            btntag.onclick = () => {
-                tagContainer.removeChild(btntag)
-                resetSearch()
-            }
+            btntag.textContent = tag
+            allTags.push(tag)
+            let closeTag = document.createElement("button")
+            btntag.style.backgroundColor = color
+            tagContainer.appendChild(btntag);
+            btntag.appendChild(closeTag)
+            closeTag.classList.add("close-button");
+            closeTag.style.backgroundColor = color;
+            closeTag.textContent = "X"
+
+            allTags.push(tag)
         }
         // cas où il n'y a pas de résultat
-        function emptyResponse () {
+        function emptyResponse() {
             let response = document.createElement("span")
-            response.textContent="Votre recherche ne correspond à aucune réponse. Essayez autre chose ..."
+            response.classList.add("row")
+            response.classList.add("emptyresp")
+            response.textContent = "Votre recherche ne correspond à aucune réponse. Essayez autre chose ..."
             container.appendChild(response)
         }
         // RECHERCHES // INPUTS.
         // searchBar search / 3 charactères dans la barre de recherche principale (reste à enlever les espaces)
-        searchbar.onkeydown = (e) => {
+        searchbar.onkeydown = () => {
             container.innerHTML = ""
             if (searchbar.value.length > 2) {
                 filterData(searchbar.value)
                 filterAffichage(searchbar.value)
             }
-            else if (searchbar.value.length < 2) {
+            else if (searchbar.value.length <= 2) {
                 resetSearch()
             }
         }
+        searchButton.onclick = () => {
+            container.innerHTML = ""
+            filterData(searchbar.value)
+            filterAffichage(searchbar.value)
+        }
 
-        let selectors = [selectIngr, selectApp , selectUst]
+        let selectors = [selectIngr, selectApp, selectUst]
         let backgroundColors = ["#3282F7", "#68D9A4", "#ED6454"]
 
         // onchange
         for (let i in selectors) {
             selectors[i].onchange = () => {
+                let tags = []
                 container.innerHTML = ""
-                if(selectors[i].value != ""){ // à demander si bonne pratique
+                if (selectors[i].value !== "") {
                     filterData(selectors[i].value)
                     filterAffichage(selectors[i].value)
                     displaytag(selectors[i].value, backgroundColors[i])
+                    tag = document.getElementsByClassName("tagButton")
+                    for(let elt of tag){
+                        elt.onclick=()=>{
+                            allTags = allTags.filter(e => !e.includes(elt.textContent.substring(0,elt.textContent.length-1)))
+                            tagContainer.removeChild(elt)
+                            for(let elt in allTags){
+                                filteredArray = recipes
+                                container.innerHTML =""
+                                filterData(allTags[elt])
+                                filterAffichage(allTags[elt])
+                            }
+                            if(allTags.length === 0){
+                                resetSearch()
+                            }
+                        }
+                    }
                 }
             }
+            //
         }
     })
 

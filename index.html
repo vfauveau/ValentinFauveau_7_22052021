@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,25 +15,28 @@
             <img id="logo" src="logo_Les_Petits_Plats.jpg"></img>
         </a>
     </header>
-    <main>
-        <div class="container-fluid row">
+    <main class="container-fluid">
+        <div class="container-fluid row-cols-lg-1 row-cols-md-6 row-cols-md-6 ">
             <input placeholder ="Rechercher un ingrédient, appareils, ustensiles ou une recette" id="recherche" textarea type="search">
-
         </input>
+        <button id="searchButton"><i class="fas fa-search"></i></button>
         </div>
         <div id="tagSpan" class="container-fluid row"></div>
         <div class="container-fluid" id="select-container">
-            <input list="data-list-ingredient" name="ingredient" id="select-ingredient" type="text" class="option col-2" placeholder="Ingredients">
+            <input list="data-list-ingredient" name="ingredient" id="select-ingredient" type="text" class="option col-lg-2" placeholder="Ingredients">
                 <datalist id="data-list-ingredient"></datalist>
 
-            <input list="data-list-appareil" name="appareil" id="select-appareil" type="text" class="option col-2" placeholder="Appareils">
+            <input list="data-list-appareil" name="appareil" id="select-appareil" type="text" class="option col-lg-2" placeholder="Appareils">
                 <datalist id="data-list-appareil"></datalist>
 
-            <input list="data-list-ustensiles" name="ustensiles" id="select-ustensiles" type="text" class="option col-2" placeholder="Ustensiles">
+            <input list="data-list-ustensiles" name="ustensiles" id="select-ustensiles" type="text" class="option col-lg-2" placeholder="Ustensiles">
                 <datalist id="data-list-ustensiles"></datalist>
         </div>
         <article class="container-fluid  recipes-wrapper"></article>
     </main>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 <script src="algo.js"></script>
 </html>
