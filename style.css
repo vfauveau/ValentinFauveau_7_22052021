@@ -1,75 +1,114 @@
 body{
-    width: 1440px;
+    align-self: center;
 }
 header{
-    width: 100%;
-    justify-content: center;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.linkLogo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+a,a:visited,a:hover{
+    text-decoration: none;
 }
 ul{
     padding-left :0;
     list-style: none;
+    width: 170px;
 }
 li{
     font-size: 12px;
+    width: 170px;
 }
-#logo{
-align-self: center;
+.logo{
+    background: url(logo.svg);
+    width: 50px;
+    height: 47px;
+    margin-top: 30px;
+    margin-left: -5px;
 }
-#recherche{
-    margin: 20px 40px;
-    width: 1240px;
+h1{
+    color : #D04F4F ;
+    font-size: 38px;
+    font-weight: bold;
+    margin-left: -5px;
+    font-family: 'DM Sans', sans-serif;
+}
+main{
+    width: auto;
+}
+.searchbar-container{
+    border: 2px solid black;
+    display: inline-flex;
+    align-items: center;
     height: 70px;
     background-color: #E7E7E7;
-    font-size: 18px;
-    border-radius: 5px;
+    width: 90%;
+    margin:  30px 3%;
 }
 #recherche::placeholder{
-    color :#000000 ; 
+    color :#000000 ;
+}
+#recherche{
+    height: 66px;
+    background-color: inherit;
+    font-size: 18px;
+    border-radius: 5px;
+    overflow: auto;
+    border: none ;
+    width: 100%;
+    font-family: 'Lato', sans-serif;
+}
+#recherche:focus,#recherche:active,#recherche:focus-within,#recherche:active{
+    border: none;
+    outline: none;
 }
 #searchButton{
     position: relative;
     z-index: 5;
-    right: 7%;
-    BORDER: NONE;
+    right: 2%;
+    width: 40px;
+    height: 50px;
+    border : none ; 
     background-color: inherit;
 }
 button{
     cursor: pointer;
 }
+li{
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
 #select-container{
     display: flex;
 }
-#select-ingredient{
-    background-color: #3282F7;
+#select-ingredient,#select-appareil,#select-ustensiles{
     width: 170px;
     height: 70px;
     color : white ;
     border-radius: 5px;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
     margin: 0 3%;
+    margin-right: 2.5%;
+    border: none;
+    font-family: 'Lato', sans-serif;
+}
+#select-ingredient{
+    background-color: #3282F7;
 }
 #select-appareil{
     background-color: #68D9A4 ;
-    text-transform: capitalize;
-    width: 170px;
-    height: 70px;
-    color : white ;
-    border-radius: 5px;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0 3.2%;
 }
 #select-ustensiles{
     background-color:#ED6454 ;
-    width: 170px;
-    height: 70px;
-    color : white ;
-    border-radius: 5px;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0 3.2%;
 }
 .recipe-container{
     width: 380px;
@@ -82,6 +121,7 @@ button{
     width: 380px;
     height: 178px;
     background-color: #C7BEBE;
+    border-radius: 5px;
 }
 
 .recipes-wrapper{
@@ -94,57 +134,79 @@ button{
     height: 110px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: break-spaces;
     font-size: 12px;
     font-weight: 500;
+    font-family: 'Roboto' , sans-serif;
 }
 .recipe-text-container{
     padding: 1em;
+    border-radius: 5px;
 }
+
 .recipe-title{
     display: inline-flex;
     justify-content: space-between;
     font-size: 18px;
     align-items: center;
     width: 100%;
-    margin-bottom: 0;
+    margin-bottom: 5px;
+    font-family: 'Lato', sans-serif;
 }
 .recipe-title h3 {
-    font-size: 20px;
+    font-size: 19px;
+    max-width: 240px;
+    margin-bottom: 0;
+    margin-top : -5px;
+}
+.recipe-title span {
+    min-width: 70px;
+    align-items: center;
+}
+small{
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Lato', sans-serif;
+    max-width: 60px;
 }
 .recipe-descr-list{
     display: flex;
     justify-content: space-between;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.fa-clock{
+    margin-right: 5px;
 }
 #tagSpan{
-    height: 60px;
-    display: inline-flex;
-    flex-wrap: nowrap;
+    height: 50px;
+    display: none;
+    position: relative;
+    min-width: 100%;
+    justify-content: flex-start;
     flex-direction: row;
     margin-bottom: 15px;
+    max-width: 90%;
+    margin-bottom: 30px;
+    margin-left : 1%;
 }
 .tagButton{
     min-width: 150px;
     color :#E7E7E7;
     width: auto;
-    height: 40px;
-    width: auto;
-    margin-left: 42px;
-    margin-right: 15px;
-    font-weight: 700;
+    margin-left: 30px;
     padding: 2%;
+    margin-bottom: 2%;
+    height: 50px;
     text-align: center;
     border-radius: 5px;
     display: flex;
     justify-content: space-around;
-    align-items: center;
     text-align: center;
+    align-items: center;
     font-weight: bold;
-}
-
-datalist{
-    text-transform: capitalize;
 }
 input::placeholder{
     color: #E7E7E7;
@@ -169,4 +231,73 @@ option{
     margin-left : 40px ;
     margin-top: 10px;
     font-size: 20px;
+}
+
+/* medias querries */ 
+@media (max-width : 500px){
+    .recipe-container > img, .recipe-container{
+        width: 350px;
+    }
+    .tagButton{
+        min-width: 130px;
+    }
+    .recipes-wrapper{
+        margin-left: -3%;
+    }
+}
+
+@media (max-width : 765px) {
+    #select-container{
+        display: flex ;
+        width: auto;
+        height: auto;
+        flex-direction: column;
+        flex-wrap: wrap;
+
+    }
+    #select-ingredient,#select-appareil,#select-ustensiles{
+        width: 90%;
+        margin-bottom : 15px ;
+    }
+    .recipes-wrapper{
+        display: flex;
+        align-items: center ;
+        flex-direction: column;
+    }
+    .recipe-container{
+        margin: 2% 0%;
+    }
+    #recherche::placeholder{
+        font-size: 15px;
+        overflow: hidden;
+    }
+}
+@media (max-width : 865px){
+    .recipes-wrapper{
+        display: flex;
+        align-items: center ;
+        flex-direction: column;
+    }
+    #tagSpan{
+        margin-bottom: 50px;
+    }
+}
+@media (min-width : 1500px) and (max-width : 1660px){
+    body{
+        margin:  2% 3%;
+    }
+    .searchbar-container{
+        width: 1318px;
+    }
+}
+@media (min-width : 1661px){
+    body{
+        margin: 2% 7.5%;
+    }
+    .searchbar-container{
+        width: 83%;
+    }
+    header{
+        width: 1440px;
+    }
 }
