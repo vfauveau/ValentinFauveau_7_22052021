@@ -86,22 +86,20 @@ fetch("recipes.json")
             for (let x in arrayRecherche) {
                 if (arrayRecherche[x].name.toLowerCase().includes(recherche)) {
                     resultat.push(arrayRecherche[x]);
-                    arrayRecherche.splice(x, 1);
                 }
                 if (arrayRecherche[x].description.toLowerCase().includes(recherche)) {
                     resultat.push(arrayRecherche[x]);
-                    arrayRecherche.splice(x, 1);
                 }
                 for (let elt of arrayRecherche[x].ingredients) {
                     if (elt.ingredient.toLowerCase().includes(recherche)) {
                         resultat.push(arrayRecherche[x]);
-                        arrayRecherche.splice(x, 1)
                     }
                 }
             }
             // sort par ordre alphabétique
             resultat.sort((a, b) => a.name.localeCompare(b.name))
-            arrayRecherche = resultat
+            arrayRecherche= Array.from(new Set(resultat))
+            resultat.length = 0 ;
         }
 
         // function de recherche par mot clé sur les appareils
@@ -113,7 +111,8 @@ fetch("recipes.json")
                 }
             }
             resultat.sort((a, b) => a.name.localeCompare(b.name))
-            return arrayRecherche = resultat;
+            arrayRecherche= Array.from(new Set(resultat))
+            resultat.length = 0 ;
         }
         // fonction de recherche par mot clé ustensiles
         function rechercheUstensils(recherche) {
@@ -126,7 +125,8 @@ fetch("recipes.json")
                 }
             }
             resultat.sort((a, b) => a.name.localeCompare(b.name))
-            return arrayRecherche = resultat;
+            arrayRecherche= Array.from(new Set(resultat))
+            resultat.length = 0 ;
         }
         // Fonction qui gère la création et affichage du tag quand un mot clé est selectionné dans une datalist
         function displaytag(tag, color) {
@@ -211,8 +211,8 @@ fetch("recipes.json")
         }
         function optionsAppliance() {
             let arrayAppliance = [];
-            for (let i in resultat) {
-                arrayAppliance.push(resultat[i].appliance);
+            for (let i in arrayRecherche) {
+                arrayAppliance.push(arrayRecherche[i].appliance);
             }
             let items = arrayAppliance.filter(function (ele, pos) {
                 return arrayAppliance.indexOf(ele) == pos;
@@ -225,9 +225,9 @@ fetch("recipes.json")
         }
         function optionsIngredients() {
             let arrayIngredients = [];
-            for (let i in resultat) {
-                for (let x in resultat[i].ingredients) {
-                    arrayIngredients.push(resultat[i].ingredients[x].ingredient);
+            for (let i in arrayRecherche) {
+                for (let x in arrayRecherche[i].ingredients) {
+                    arrayIngredients.push(arrayRecherche[i].ingredients[x].ingredient);
                 }
             }
             for (let ingredient in arrayIngredients) {
@@ -246,9 +246,9 @@ fetch("recipes.json")
         function optionsUstensiles() {
             let arrayUstensiles = [];
             // On récupère les éléments trovués da;ns un array
-            for (let i in resultat) {
-                for (let x in resultat[i].ustensils) {
-                    arrayUstensiles.push(resultat[i].ustensils[x]);
+            for (let i in arrayRecherche) {
+                for (let x in arrayRecherche[i].ustensils) {
+                    arrayUstensiles.push(arrayRecherche[i].ustensils[x]);
                 }
             }
             // on filtre les doublons dans les elements trouvés
