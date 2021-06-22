@@ -21,20 +21,37 @@
         </a>
     </header>
     <main>
+        <!--Main searchbar-->
         <div class="searchbar-container">
-        <input placeholder ="Rechercher un ingrédient, appareils, ustensiles ou une recette" id="recherche" type="text">
-        <button id="searchButton"><i class="fas fa-search"></i></button>
+            <input placeholder ="Rechercher un ingrédient, appareils, ustensiles ou une recette" id="recherche" type="text">
+            <button id="searchButton"><i class="fas fa-search"></i></button>
         </div>
         <div id="tagSpan"></div>
         <div id="select-container">
-            <input list="data-list-ingredient" name="ingredient" id="select-ingredient" type="text" class="option col-lg-2" placeholder="Ingredients">
-                <datalist id="data-list-ingredient"></datalist>
-
-            <input list="data-list-appareil" name="appareil" id="select-appareil" type="text" class="option col-lg-2" placeholder="Appareils">
-                <datalist id="data-list-appareil"></datalist>
-
-            <input list="data-list-ustensiles" name="ustensiles" id="select-ustensiles" type="text" class="option col-lg-2" placeholder="Ustensiles">
-                <datalist id="data-list-ustensiles"></datalist>
+            <!--Select Ingr-->
+            <div id="select-ingredient">
+                <div class="select-content">
+                    <input id="searchIngr" placeholder="Ingredients" type="text">
+                    <button class="arrow"><i class="fas fa-angle-up"></i></button>
+                </div>
+                    <div id="option-container-ingr"></div>
+            </div>
+            <!-- Select App-->
+            <div id="select-appliance">
+                <div class="select-content">
+                    <input id="searchApp" placeholder="Appareils" type="text">
+                    <button class="arrow"><i class="fas fa-angle-up"></i></button>
+                </div>
+                    <div id="option-container-app"></div>
+            </div>
+            <!-- Select Ust-->
+            <div id="select-ustensiles">
+                <div class="select-content">
+                    <input id="searchUst" placeholder="Ustensiles" type="text">
+                    <button class="arrow"><i class="fas fa-angle-up"></i></button>
+                </div>
+                    <div id="option-container-ust"></div>
+            </div>
         </div>
         <article class="recipes-wrapper"></article>
     </main>

@@ -1,14 +1,26 @@
+// DOM
 let searchbar = document.getElementById("recherche");
 let container = document.querySelector(".recipes-wrapper");
-let selectIngr = document.getElementById("select-ingredient");
-let selectUst = document.getElementById("select-ustensiles");
-let selectApp = document.getElementById("select-appareil");
-let tagContainer = document.getElementById("tagSpan");
-let datalistIngr = document.getElementById("data-list-ingredient");
-let datalistApp = document.getElementById("data-list-appareil");
-let datalistUst = document.getElementById("data-list-ustensiles");
+// inputs secondaires
+let inputIngr = document.getElementById("searchIngr");
+let inputUst = document.getElementById("searchUst");
+let inputApp = document.getElementById("searchApp");
+let secondarySearchs = [inputIngr, inputApp, inputUst];
+let backgroundColors = ["#3282F7", "#68D9A4", "#ED6454"];
+// endroits où seront ajoutés les divers mots clés
+let optionsIngr = document.getElementById("option-container-ingr");
+let optionsApp = document.getElementById("option-container-app");
+let optionsUst = document.getElementById("option-container-ust");
+let keywordsContainer = [optionsIngr, optionsApp, optionsUst];
+// containers des blocs de recherche secondaires
+let ingredientContainer = document.getElementById("select-ingredient");
+let applianceContainer = document.getElementById("select-appliance");
+let ustensilesContainer = document.getElementById("select-ustensiles");
+let optionsContainers = [ingredientContainer, applianceContainer, ustensilesContainer];
+// misc
 let allTags = [];
-// clear array
+let tagContainer = document.getElementById("tagSpan");
+// vide un array
 function clearArray(array) {
     array.length = 0;
 }
@@ -71,13 +83,14 @@ fetch("recipes.json")
             arrayRecherche = [].concat(recipes)
             clearArray(resultat);
             container.innerHTML = "";
-            datalistApp.innerHTML = "";
-            datalistIngr.innerHTML = "";
-            datalistUst.innerHTML = "";
+            optionsApp.innerHTML = "";
+            optionsIngr.innerHTML = "";
+            optionsUst.innerHTML = "";
             tagContainer.style.display = "none";
-            defaultSelectIng(datalistIngr);
-            defaultSelectUst(datalistUst);
-            defaultSelectApp(datalistApp);
+            tagContainer.innerHTML="";
+            defaultSelectIng(optionsIngr);
+            defaultinputUst(optionsUst);
+            defaultinputApp(optionsApp);
         }
         // fonction de recherche qui cycle dans les éléments et les élimine de la base de données si ils sont validés
         // on effectue 5 recherches (ingredients, nom, ustensiles, appliance, description des recettes)
@@ -98,8 +111,8 @@ fetch("recipes.json")
             }
             // sort par ordre alphabétique
             resultat.sort((a, b) => a.name.localeCompare(b.name))
-            arrayRecherche= Array.from(new Set(resultat))
-            resultat.length = 0 ;
+            arrayRecherche = Array.from(new Set(resultat))
+            resultat.length = 0;
         }
 
         // function de recherche par mot clé sur les appareils
@@ -111,8 +124,8 @@ fetch("recipes.json")
                 }
             }
             resultat.sort((a, b) => a.name.localeCompare(b.name))
-            arrayRecherche= Array.from(new Set(resultat))
-            resultat.length = 0 ;
+            arrayRecherche = Array.from(new Set(resultat))
+            resultat.length = 0;
         }
         // fonction de recherche par mot clé ustensiles
         function rechercheUstensils(recherche) {
@@ -125,8 +138,8 @@ fetch("recipes.json")
                 }
             }
             resultat.sort((a, b) => a.name.localeCompare(b.name))
-            arrayRecherche= Array.from(new Set(resultat))
-            resultat.length = 0 ;
+            arrayRecherche = Array.from(new Set(resultat))
+            resultat.length = 0;
         }
         // Fonction qui gère la création et affichage du tag quand un mot clé est selectionné dans une datalist
         function displaytag(tag, color) {
@@ -151,14 +164,30 @@ fetch("recipes.json")
             response.textContent = "Votre recherche ne correspond à aucune de nos recettes. Essayez autre chose ...";
             container.appendChild(response);
         }
-        function creationOption(liste, array) {
+
+        // Fonction importante qui génère les mots clés dans le DOM
+        function creationOption(endroit, array) {
             let items = array.filter(function (ele, pos) {
                 return array.indexOf(ele) == pos;
             });
+            items.sort();
             for (let elt of items) {
-                let option = document.createElement("option");
+                let option = document.createElement("span");
+                option.classList.add("options")
                 option.textContent = elt;
-                liste.appendChild(option);
+                endroit.appendChild(option);
+                option.onclick=()=>{
+                    option.parentNode.style.display="none"
+                    if (window.matchMedia("(min-width: 600px)").matches) {
+                        option.parentNode.parentElement.style.width="400px"
+                      } else {
+                        option.parentNode.parentElement.style.width="90%"
+                      }
+                    displaytag(option.textContent, backgroundColors[0])
+                    recherche(option.textContent)
+                    filterAffichage(option.textContent)
+                    tagestion()
+                }
             }
             clearArray(array);
         }
@@ -170,31 +199,28 @@ fetch("recipes.json")
                     arrayTest.push(recipes[i].ingredients[x].ingredient);
                 }
             }
-            creationOption(datalistIngr, arrayTest);
-            selectIngr.value = "";
+            creationOption(optionsIngr, arrayTest);
         }
         // Select Box Appliance par defaut
-        function defaultSelectApp() {
+        function defaultinputApp() {
             let arrayTest = [];
             for (let i in recipes) {
                 arrayTest.push(recipes[i].appliance);
             }
-            creationOption(datalistApp, arrayTest);
-            selectApp.value = "";
+            creationOption(optionsApp, arrayTest);
         }
         // Select BOX Ustensils par defaut
-        function defaultSelectUst() {
+        function defaultinputUst() {
             let arrayTest = [];
             for (let i in recipes) {
                 for (let x in recipes[i].ustensils) {
                     arrayTest.push(recipes[i].ustensils[x]);
                 }
             }
-            creationOption(datalistUst, arrayTest);
-            selectUst.value = "";
+            creationOption(optionsUst, arrayTest);
         }
         // fonction qui affiche les résultats et options filtrées
-        function filterAffichage() {
+        function filterAffichage(valeur) {
             container.innerHTML = ""
             if (arrayRecherche.length === 0) {
                 emptyResponse();
@@ -202,14 +228,34 @@ fetch("recipes.json")
             for (let elt of arrayRecherche) {
                 affiche(elt);
             }
-            datalistApp.innerHTML = "";
-            datalistIngr.innerHTML = "";
-            datalistUst.innerHTML = "";
-            optionsAppliance();
-            optionsIngredients();
-            optionsUstensiles();
+            optionsApp.innerHTML = "";
+            optionsIngr.innerHTML = "";
+            optionsUst.innerHTML = "";
+            optionsAppliance(valeur);
+            optionsIngredients(valeur);
+            optionsUstensiles(valeur);
         }
-        function optionsAppliance() {
+        function tagestion() {
+            let tag = document.getElementsByClassName("tagButton");
+            for (let elt of tag) {
+                elt.onclick = () => {
+                    allTags = allTags.filter(e => !e.includes(elt.textContent.substring(0, elt.textContent.length - 1)));
+                    tagContainer.removeChild(elt);
+                    for (let elt in allTags) {
+                        container.innerHTML = "";
+                        recherche(allTags[elt]);
+                        rechercheAppliance(allTags[elt])
+                        rechercheUstensils(allTags[elt])
+                        filterAffichage();
+                    }
+                    if (allTags.length === 0) {
+                        reset();
+                        clearArray(tag)
+                    }
+                };
+            }
+        }
+        function optionsAppliance(valeur) {
             let arrayAppliance = [];
             for (let i in arrayRecherche) {
                 arrayAppliance.push(arrayRecherche[i].appliance);
@@ -218,12 +264,13 @@ fetch("recipes.json")
                 return arrayAppliance.indexOf(ele) == pos;
             });
             for (let x of items) {
-                let option = document.createElement("option");
+                let option = document.createElement("span");
+                option.classList.add("options")
                 option.textContent = x;
-                datalistApp.appendChild(option);
+                optionsApp.appendChild(option);
             }
         }
-        function optionsIngredients() {
+        function optionsIngredients(valeur) {
             let arrayIngredients = [];
             for (let i in arrayRecherche) {
                 for (let x in arrayRecherche[i].ingredients) {
@@ -231,19 +278,20 @@ fetch("recipes.json")
                 }
             }
             for (let ingredient in arrayIngredients) {
-                arrayIngredients[ingredient].toLowerCase();
+                arrayIngredients[ingredient] = arrayIngredients[ingredient].toLowerCase();
             }
             let items = arrayIngredients.filter(function (ele, pos) {
                 return arrayIngredients.indexOf(ele) == pos;
             });
+            items.sort()
             for (let x of items) {
-                let option = document.createElement("option");
+                let option = document.createElement("span");
                 option.textContent = x;
-                datalistIngr.appendChild(option);
+                option.classList.add("options")
+                optionsIngr.appendChild(option);
             }
         }
-
-        function optionsUstensiles() {
+        function optionsUstensiles(valeur) {
             let arrayUstensiles = [];
             // On récupère les éléments trovués da;ns un array
             for (let i in arrayRecherche) {
@@ -257,15 +305,16 @@ fetch("recipes.json")
             });
             // on affiche les éléments restants
             for (let x of items) {
-                let option = document.createElement("option");
+                let option = document.createElement("span");
+                option.classList.add("options")
                 option.textContent = x;
-                datalistUst.appendChild(option);
+                optionsUst.appendChild(option);
             }
         }
         // creation des options par defaut
-        defaultSelectIng(datalistIngr);
-        defaultSelectApp(datalistApp);
-        defaultSelectUst(datalistUst);
+        defaultSelectIng();
+        defaultinputApp();
+        defaultinputUst();
         // evenement bouton barre de recherche
         searchButton.onclick = () => {
             if (searchbar.value.length > 2) {
@@ -274,7 +323,6 @@ fetch("recipes.json")
                 filterAffichage();
             }
         };
-
         // evenements barre de recherche
         searchbar.onkeydown = () => {
             if (searchbar.value.length > 2) {
@@ -282,58 +330,76 @@ fetch("recipes.json")
                 recherche(searchbar.value);
                 filterAffichage();
             }
-            else if (searchbar.value.length < 2) {
+            else if (searchbar.value.length < 3) {
                 reset();
             }
         };
-        let selectors = [selectIngr, selectApp, selectUst];
-        let backgroundColors = ["#3282F7", "#68D9A4", "#ED6454"];
-        for (let i in selectors) {
-            // changement de valeur des selecteurs (on change)
-            selectors[i].onchange = () => {
+
+        for (let i in secondarySearchs) {
+            secondarySearchs[i].onkeydown = (e) => {
                 container.innerHTML = "";
-                if (selectors[i].value.length > 1) {
+                if (secondarySearchs[i].value.length > 2) {
                     if (i == 0) {
-                        recherche(selectors[i].value.toLowerCase())
-                        filterAffichage();
-                        displaytag(selectors[i].value, backgroundColors[i]);
+                        recherche(secondarySearchs[i].value.toLowerCase())
+                        filterAffichage(secondarySearchs[i].value.toLowerCase());
+                        if (e.keyCode == 13) { displaytag(secondarySearchs[i].value, backgroundColors[i]); }
                         tagestion()
                     }
                     if (i == 1) {
-                        rechercheAppliance(selectors[i].value.toLowerCase())
-                        filterAffichage();
-                        displaytag(selectors[i].value, backgroundColors[i]);
+                        rechercheAppliance(secondarySearchs[i].value.toLowerCase())
+                        filterAffichage(secondarySearchs[i].value.toLowerCase());
+                        if (e.keyCode == 13) { displaytag(secondarySearchs[i].value, backgroundColors[i]); }
                         tagestion()
                     }
                     if (i == 2) {
-                        rechercheUstensils(selectors[i].value.toLowerCase())
-                        filterAffichage();
-                        displaytag(selectors[i].value, backgroundColors[i]);
+                        rechercheUstensils(secondarySearchs[i].value.toLowerCase())
+                        filterAffichage(secondarySearchs[i].value.toLowerCase());
+                        if (e.keyCode == 13) { displaytag(secondarySearchs[i].value, backgroundColors[i]); }
                         tagestion()
                     }
                     // gestions des tags
-                    function tagestion() {
-                        let tag = document.getElementsByClassName("tagButton");
-                        for (let elt of tag) {
-                            elt.onclick = () => {
-                                allTags = allTags.filter(e => !e.includes(elt.textContent.substring(0, elt.textContent.length - 1)));
-                                tagContainer.removeChild(elt);
-                                for (let elt in allTags) {
-                                    container.innerHTML = "";
-                                    recherche(allTags[elt]);
-                                    rechercheAppliance(allTags[elt])
-                                    rechercheUstensils(allTags[elt])
-                                    filterAffichage();
-                                }
-                                if (allTags.length === 0) {
-                                    reset();
-                                    clearArray(tag)
-                                }
-                            };
-                        }
-                    }
+
+                }
+                else {
+                    reset()
                 }
             };
+        }
+        let arrows = document.querySelectorAll(".arrow")
+        let arrowBooleen = true;
+
+        for (let arrow in arrows) {
+            arrows[arrow].onclick = () => {
+                if (arrowBooleen == true) {
+                    arrows[arrow].removeChild(arrows[arrow].lastChild);
+                    let arrowdown = document.createElement("i")
+                    arrowdown.classList.add("fas")
+                    arrowdown.classList.add("fa-angle-down")
+                    arrows[arrow].appendChild(arrowdown)
+                    if (window.matchMedia("(min-width: 600px)").matches) {
+                        optionsContainers[arrow].style.width = "400px"
+                      } else {
+                        optionsContainers[arrow].style.width = "90%"
+                      }
+
+                    keywordsContainer[arrow].style.display = "flex"
+                    return arrowBooleen = false;
+                }
+                else {
+                    arrows[arrow].removeChild(arrows[arrow].lastChild);
+                    let arrowUp = document.createElement("i")
+                    arrowUp.classList.add("fas")
+                    arrowUp.classList.add("fa-angle-up")
+                    arrows[arrow].appendChild(arrowUp)
+                    keywordsContainer[arrow].style.display = "none"
+                    if (window.matchMedia("(min-width: 600px)").matches) {
+                        optionsContainers[arrow].style.width = "400px"
+                      } else {
+                        optionsContainers[arrow].style.width = "90%"
+                      }
+                    return arrowBooleen = true;
+                }
+            }
         }
     })
     .catch(function (error) {

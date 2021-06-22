@@ -88,28 +88,74 @@ li{
 }
 #select-container{
     display: flex;
+    margin: auto 3%;
 }
-#select-ingredient,#select-appareil,#select-ustensiles{
+#searchIngr, #searchApp,#searchUst{
     width: 170px;
     height: 70px;
     color : white ;
     border-radius: 5px;
     font-size: 18px;
     font-weight: 700;
-    margin: 0 3%;
     margin-right: 2.5%;
+    padding: 5px;
     border: none;
     font-family: 'Lato', sans-serif;
 }
 #select-ingredient{
     background-color: #3282F7;
 }
-#select-appareil{
+#select-appliance{
     background-color: #68D9A4 ;
 }
 #select-ustensiles{
     background-color:#ED6454 ;
 }
+#select-ingredient,#select-appliance,#select-ustensiles{
+    border-radius: 5px;
+    height: fit-content;
+    margin-right: 2.5%;
+}
+.select-content{
+    display: flex;
+    justify-content: space-between;
+}
+/* petites barres de recherches */
+#searchIngr,#searchUst,#searchApp{
+    line-height: 60px ;
+    border: none;
+    width: 90%;
+    outline: none;
+}
+#searchIngr{
+    background-color: #3282F7;
+}
+#searchApp{
+    background-color:#68D9A4;
+}
+#searchUst{
+    background-color: #ED6454;
+}
+.arrow{
+    background-color: inherit ;
+    border: none;
+    color : white ;
+    width: 10%;
+    margin-right: 5px;
+}
+/* petites barres de recherches */
+#option-container-ingr::-webkit-scrollbar,#option-container-app::-webkit-scrollbar,#option-container-ust::-webkit-scrollbar {
+    display: none;
+  }
+#option-container-ingr, #option-container-app,#option-container-ust{
+    max-height: 600px;
+    padding: 10px;
+    display: none;
+    flex-wrap: wrap;
+    flex-flow:column;
+    overflow-y: scroll;
+}
+/* CSS sur l'affichage des recettes */
 .recipe-container{
     width: 380px;
     background-color: #E7E7E7;
@@ -180,6 +226,8 @@ small{
 .fa-clock{
     margin-right: 5px;
 }
+/* Fin CSS sur l'affichage des recettes
+Début CSS concernant les tags */
 #tagSpan{
     height: 50px;
     display: none;
@@ -190,7 +238,6 @@ small{
     margin-bottom: 15px;
     max-width: 90%;
     margin-bottom: 30px;
-    margin-left : 1%;
 }
 .tagButton{
     min-width: 150px;
@@ -215,9 +262,17 @@ input::placeholder{
     margin-left: 42px;
     margin-top: 20px;
 }
-option{
+.options{
     color: #E7E7E7;
-    background-color: #3282F7;
+    background-color:inherit ;
+    text-transform: capitalize;
+    font-size: 18px;
+    cursor: pointer;
+    max-width: max-content;
+}
+.options:hover{
+    border-bottom: #E7E7E7 1px solid;
+
 }
 .close-button{
     color : white ;
@@ -241,9 +296,7 @@ option{
     .tagButton{
         min-width: 130px;
     }
-    .recipes-wrapper{
-        margin-left: -3%;
-    }
+
 }
 
 @media (max-width : 765px) {
@@ -253,9 +306,10 @@ option{
         height: auto;
         flex-direction: column;
         flex-wrap: wrap;
-
+        align-items: center;
+        margin: 0;
     }
-    #select-ingredient,#select-appareil,#select-ustensiles{
+    #select-ingredient,#select-appliance,#select-ustensiles{
         width: 90%;
         margin-bottom : 15px ;
     }
