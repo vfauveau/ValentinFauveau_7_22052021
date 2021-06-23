@@ -87,10 +87,10 @@ fetch("recipes.json")
             optionsIngr.innerHTML = "";
             optionsUst.innerHTML = "";
             tagContainer.style.display = "none";
-            tagContainer.innerHTML="";
-            defaultSelectIng(optionsIngr);
-            defaultinputUst(optionsUst);
-            defaultinputApp(optionsApp);
+            tagContainer.innerHTML = "";
+            optionsAppliance();
+            optionsIngredients();
+            optionsUstensiles();
         }
         // fonction de recherche qui cycle dans les éléments et les élimine de la base de données si ils sont validés
         // on effectue 5 recherches (ingredients, nom, ustensiles, appliance, description des recettes)
@@ -114,7 +114,6 @@ fetch("recipes.json")
             arrayRecherche = Array.from(new Set(resultat))
             resultat.length = 0;
         }
-
         // function de recherche par mot clé sur les appareils
         function rechercheAppliance(recherche) {
             for (let x in arrayRecherche) {
@@ -166,59 +165,7 @@ fetch("recipes.json")
         }
 
         // Fonction importante qui génère les mots clés dans le DOM
-        function creationOption(endroit, array) {
-            let items = array.filter(function (ele, pos) {
-                return array.indexOf(ele) == pos;
-            });
-            items.sort();
-            for (let elt of items) {
-                let option = document.createElement("span");
-                option.classList.add("options")
-                option.textContent = elt;
-                endroit.appendChild(option);
-                option.onclick=()=>{
-                    option.parentNode.style.display="none"
-                    if (window.matchMedia("(min-width: 600px)").matches) {
-                        option.parentNode.parentElement.style.width="400px"
-                      } else {
-                        option.parentNode.parentElement.style.width="90%"
-                      }
-                    displaytag(option.textContent, backgroundColors[0])
-                    recherche(option.textContent)
-                    filterAffichage(option.textContent)
-                    tagestion()
-                }
-            }
-            clearArray(array);
-        }
-        // Select Box Ingredients par defaut
-        function defaultSelectIng() {
-            let arrayTest = [];
-            for (let i in recipes) {
-                for (let x in recipes[i].ingredients) {
-                    arrayTest.push(recipes[i].ingredients[x].ingredient);
-                }
-            }
-            creationOption(optionsIngr, arrayTest);
-        }
-        // Select Box Appliance par defaut
-        function defaultinputApp() {
-            let arrayTest = [];
-            for (let i in recipes) {
-                arrayTest.push(recipes[i].appliance);
-            }
-            creationOption(optionsApp, arrayTest);
-        }
-        // Select BOX Ustensils par defaut
-        function defaultinputUst() {
-            let arrayTest = [];
-            for (let i in recipes) {
-                for (let x in recipes[i].ustensils) {
-                    arrayTest.push(recipes[i].ustensils[x]);
-                }
-            }
-            creationOption(optionsUst, arrayTest);
-        }
+
         // fonction qui affiche les résultats et options filtrées
         function filterAffichage(valeur) {
             container.innerHTML = ""
@@ -255,45 +202,57 @@ fetch("recipes.json")
                 };
             }
         }
-        function optionsAppliance(valeur) {
-            let arrayAppliance = [];
+        function optionsAppliance() {
+            let arrayAppliance = []
             for (let i in arrayRecherche) {
-                arrayAppliance.push(arrayRecherche[i].appliance);
+                arrayAppliance.push(arrayRecherche[i].appliance)
             }
             let items = arrayAppliance.filter(function (ele, pos) {
                 return arrayAppliance.indexOf(ele) == pos;
-            });
-            for (let x of items) {
+            })
+            for(let x of items){
                 let option = document.createElement("span");
-                option.classList.add("options")
+                option.classList.add("options");
                 option.textContent = x;
                 optionsApp.appendChild(option);
-            }
-        }
-        function optionsIngredients(valeur) {
-            let arrayIngredients = [];
-            for (let i in arrayRecherche) {
-                for (let x in arrayRecherche[i].ingredients) {
-                    arrayIngredients.push(arrayRecherche[i].ingredients[x].ingredient);
+                option.onclick=()=>{
+                    rechercheAppliance(option.textContent.toLowerCase());
+                    filterAffichage();
+                    displaytag(x, backgroundColors[1]);
                 }
             }
-            for (let ingredient in arrayIngredients) {
-                arrayIngredients[ingredient] = arrayIngredients[ingredient].toLowerCase();
+        };
+        function optionsIngredients() {
+            let arrayIngredients = []
+            for (let i in arrayRecherche) {
+                for (let x in arrayRecherche[i].ingredients)
+                    arrayIngredients.push(arrayRecherche[i].ingredients[x].ingredient)
             }
             let items = arrayIngredients.filter(function (ele, pos) {
                 return arrayIngredients.indexOf(ele) == pos;
-            });
-            items.sort()
-            for (let x of items) {
-                let option = document.createElement("span");
-                option.textContent = x;
+            })
+                for (let x of items) {
+                let option = document.createElement("span")
+                option.textContent = x
                 option.classList.add("options")
-                optionsIngr.appendChild(option);
+                optionsIngr.appendChild(option)
+                option.onclick=()=>{
+                    recherche(option.textContent)
+                    filterAffichage()
+                    displaytag(x, backgroundColors[0])
+                    for(let elt in keywordsContainer){keywordsContainer[elt].style.display="none" ;
+                    if (window.matchMedia("(min-width: 600px)").matches) {
+                        optionsContainers[elt].style.width = "249px"
+                      } else {
+                        optionsContainers[elt].style.width = "90%"
+                      }}
+                }
             }
-        }
-        function optionsUstensiles(valeur) {
+        };
+
+        function optionsUstensiles() {
             let arrayUstensiles = [];
-            // On récupère les éléments trovués da;ns un array
+            // On récupère les éléments trovués dans un array
             for (let i in arrayRecherche) {
                 for (let x in arrayRecherche[i].ustensils) {
                     arrayUstensiles.push(arrayRecherche[i].ustensils[x]);
@@ -302,19 +261,58 @@ fetch("recipes.json")
             // on filtre les doublons dans les elements trouvés
             let items = arrayUstensiles.filter(function (ele, pos) {
                 return arrayUstensiles.indexOf(ele) == pos;
-            });
+            })
             // on affiche les éléments restants
             for (let x of items) {
                 let option = document.createElement("span");
-                option.classList.add("options")
                 option.textContent = x;
+                option.classList.add("options");
                 optionsUst.appendChild(option);
+                option.onclick=()=>{
+                    rechercheUstensils(option.textContent);
+                    filterAffichage();
+                    displaytag(x, backgroundColors[2]);
+                }
             }
-        }
+        };
+        // Fonction qui gère la création et affichage du tag quand un mot clé est selectionné dans une datalist
+        function displaytag(tag, color) {
+            // creation et génération des tags
+            let btntag = document.createElement("span");
+            btntag.classList.add("tagButton");
+            btntag.textContent = tag;
+            let closeTag = document.createElement("button");
+            btntag.style.backgroundColor = color;
+            tagContainer.appendChild(btntag);
+            btntag.appendChild(closeTag);
+            closeTag.classList.add("close-button");
+            closeTag.style.backgroundColor = color;
+            closeTag.textContent = "X";
+            tagContainer.style.display="inline-flex";
+            btntag.onclick=()=>{
+                tagContainer.removeChild(btntag)
+                if(tagContainer.children.length === 0){
+                    tagContainer.style.display="none"
+                    reset();
+                }
+                else{
+                    for(let elt in tagContainer.children){
+                        if(tagContainer.children[elt].textContent != undefined){
+                            arrayRecherche = recipes;
+                            resultat = [];
+                            recherche(tagContainer.children[elt].textContent.slice(0,-1).toLowerCase());
+                            if(arrayRecherche.length === 0){rechercheAppliance(tagContainer.children[elt].textContent.slice(0,-1).toLowerCase())};
+                            if(arrayRecherche.length === 0){rechercheUstensils(tagContainer.children[elt].textContent.slice(0,-1).toLowerCase())};
+                            filterAffichage()
+                        }
+                    }
+                }
+            }
+        };
         // creation des options par defaut
-        defaultSelectIng();
-        defaultinputApp();
-        defaultinputUst();
+        optionsAppliance();
+        optionsIngredients();
+        optionsUstensiles();
         // evenement bouton barre de recherche
         searchButton.onclick = () => {
             if (searchbar.value.length > 2) {
@@ -336,29 +334,21 @@ fetch("recipes.json")
         };
 
         for (let i in secondarySearchs) {
-            secondarySearchs[i].onkeydown = (e) => {
+            secondarySearchs[i].onkeydown = () => {
                 container.innerHTML = "";
                 if (secondarySearchs[i].value.length > 2) {
                     if (i == 0) {
                         recherche(secondarySearchs[i].value.toLowerCase())
                         filterAffichage(secondarySearchs[i].value.toLowerCase());
-                        if (e.keyCode == 13) { displaytag(secondarySearchs[i].value, backgroundColors[i]); }
-                        tagestion()
                     }
                     if (i == 1) {
                         rechercheAppliance(secondarySearchs[i].value.toLowerCase())
                         filterAffichage(secondarySearchs[i].value.toLowerCase());
-                        if (e.keyCode == 13) { displaytag(secondarySearchs[i].value, backgroundColors[i]); }
-                        tagestion()
                     }
                     if (i == 2) {
                         rechercheUstensils(secondarySearchs[i].value.toLowerCase())
                         filterAffichage(secondarySearchs[i].value.toLowerCase());
-                        if (e.keyCode == 13) { displaytag(secondarySearchs[i].value, backgroundColors[i]); }
-                        tagestion()
                     }
-                    // gestions des tags
-
                 }
                 else {
                     reset()
@@ -393,14 +383,14 @@ fetch("recipes.json")
                     arrows[arrow].appendChild(arrowUp)
                     keywordsContainer[arrow].style.display = "none"
                     if (window.matchMedia("(min-width: 600px)").matches) {
-                        optionsContainers[arrow].style.width = "400px"
+                        optionsContainers[arrow].style.width = "249px"
                       } else {
                         optionsContainers[arrow].style.width = "90%"
                       }
                     return arrowBooleen = true;
                 }
             }
-        }
+        };
     })
     .catch(function (error) {
         console.log(error);
