@@ -145,13 +145,14 @@ fetch("recipes.json")
                 return arrayAppliance.indexOf(ele) == pos;
             })
             for(let x of items){
-                let option = document.createElement("span")
-                option.classList.add("options")
-                option.textContent = x
-                optionsApp.appendChild(option)
+                let option = document.createElement("span");
+                option.classList.add("options");
+                option.textContent = x;
+                optionsApp.appendChild(option);
                 option.onclick=()=>{
-                    filterData(option.textContent)
-                    filterAffichage()
+                    filterData(option.textContent);
+                    filterAffichage();
+                    displaytag(x, backgroundColors[1]);
                 }
             }
         };
@@ -172,6 +173,7 @@ fetch("recipes.json")
                 option.onclick=()=>{
                     filterData(option.textContent)
                     filterAffichage()
+                    displaytag(x, backgroundColors[0])
                 }
             }
         };
@@ -198,6 +200,7 @@ fetch("recipes.json")
                 option.onclick=()=>{
                     filterData(option.textContent)
                     filterAffichage()
+                    displaytag(x, backgroundColors[2])
                 }
             }
         };
@@ -215,8 +218,7 @@ fetch("recipes.json")
             closeTag.classList.add("close-button");
             closeTag.style.backgroundColor = color;
             closeTag.textContent = "X"
-
-            allTags.push(tag)
+            tagContainer.style.display="inline-flex"
         };
         // cas où il n'y a pas de résultat
         function emptyResponse() {
@@ -294,6 +296,9 @@ fetch("recipes.json")
                         span.textContent = elt.toLowerCase();
                         span.classList.add("options");
                         keywordsContainer[searchbar].appendChild(span);
+                        span.onclick=()=>{
+                            displaytag(elt, backgroundColors[searchbar])
+                        }
                     }
                 }
                 if(selectors[searchbar].value.length < 2){
