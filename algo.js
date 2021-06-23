@@ -182,6 +182,12 @@ fetch("recipes.json")
                     filterData(option.textContent)
                     filterAffichage()
                     displaytag(x, backgroundColors[0])
+                    for(let elt in keywordsContainer){keywordsContainer[elt].style.display="none" ;
+                    if (window.matchMedia("(min-width: 600px)").matches) {
+                        optionsContainers[elt].style.width = "249px"
+                      } else {
+                        optionsContainers[elt].style.width = "90%"
+                      }}
                 }
             }
         };
@@ -235,6 +241,7 @@ fetch("recipes.json")
                     for(let elt in tagContainer.children){
                         if(tagContainer.children[elt].textContent != undefined){
                             filteredArray = recipes;
+                            resultat = [];
                             filterData(tagContainer.children[elt].textContent.slice(0,-1).toLowerCase())
                             filterAffichage()
                         }
@@ -322,6 +329,12 @@ fetch("recipes.json")
                             filterData(elt)
                             filterAffichage()
                             displaytag(elt, backgroundColors[searchbar])
+                            for(let elt in keywordsContainer){keywordsContainer[elt].style.display="none";
+                            if (window.matchMedia("(min-width: 600px)").matches) {
+                                optionsContainers[arrow].style.width = "249px"
+                              } else {
+                                optionsContainers[arrow].style.width = "90%"
+                              }}
                         }
                     }
                 }
